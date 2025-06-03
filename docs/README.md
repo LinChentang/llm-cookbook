@@ -1,4 +1,4 @@
-![../figures/readme.jpg](../figures/readme.jpg)
+![figures/C0/readme.jpg](figures/C0/readme.jpg)
 
 # 面向开发者的大模型手册 - LLM Cookbook
 
