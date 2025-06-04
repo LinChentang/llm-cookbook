@@ -26,3 +26,25 @@ activate
 ```shell
 jupyter notebook
 ```
+
+## 模型加载
+
+1. 在项目根目录下新建`.env`文件，并添加以下内容
+```text
+API_KEY=your_api_key
+BASE_URL=model_base_url
+```
+
+2. 加载模型  
+如果需要调用模型，请直接在notebook中添加以下代码（注意需要加载项目根目录到环境的path中），不需要额外的配置。
+```python
+import os
+import sys
+
+# 加载项目根目录到环境的path中
+sys.path.append(os.getcwd().split('content')[0][:-1])
+
+# 读取.env配置文件，加载配置的模型
+import utils.load_model
+from utils.load_model import get_completion
+```
