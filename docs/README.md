@@ -84,6 +84,7 @@ LLM 正在逐步改变人们的生活，而对于开发者，如何基于 LLM �
 **核心贡献者**
 
 - [邹雨衡 - 项目负责人](https://github.com/logan-zou)（Datawhale 成员 - 对外经济贸易大学研究生）
+- [左春生-项目负责人](https://github.com/LinChentang)（内容创作者-Datawhale成员）
 - [长琴 - 项目发起人](https://yam.gift/)（内容创作者 - Datawhale 成员 - AI 算法工程师）
 - [玉琳 - 项目发起人](https://github.com/Sophia-Huang)（内容创作者 - Datawhale 成员）
 - [徐虎 - 教程编撰者](https://github.com/xuhu0115)（内容创作者 - Datawhale 成员）
@@ -100,7 +101,7 @@ LLM 正在逐步改变人们的生活，而对于开发者，如何基于 LLM �
 - [王熠明](https://github.com/Bald0Wang)（内容创作者 - Datawhale 成员）
 - [曾浩龙](https://yetingyun.blog.csdn.net)（内容创作者 - Datawhale 意向成员）
 - [小饭同学](https://github.com/xinqi-fan)（内容创作者）
-- [孙韩玉](https://github.com/sunhanyu714])（内容创作者 - 算法量化部署工程师）
+- [孙韩玉](https://github.com/sunhanyu714)（内容创作者 - 算法量化部署工程师）
 - [张银晗](https://github.com/YinHan-Zhang)（内容创作者 - Datawhale 成员）
 - [左春生](https://github.com/LinChentang)（内容创作者 - Datawhale 成员）
 - [张晋](https://github.com/Jin-Zhang-Yaoguang)（内容创作者 - Datawhale 成员）
