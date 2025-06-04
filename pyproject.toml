@@ -1,0 +1,29 @@
+[project]
+name = "llm-cookbook"
+version = "1.0.0"
+description = "LLM-CookBook 项目是一个面向开发者的大模型手册，针对国内开发者的实际需求，主打 LLM 全方位入门实践。本项目基于吴恩达老师大模型系列课程内容，对原课程内容进行筛选、翻译、复现和调优，覆盖从 Prompt Engineering 到 RAG 开发、模型微调的全部流程，用最适合国内学习者的方式，指导国内开发者如何学习、入门 LLM 相关项目。"
+authors = [
+    { name = "Datawhale", email = "opensource@datawhale.club" }
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "jupyter-nbextensions-configurator>=0.6.4",
+    "notebook>=7.4.3",
+    "openai>=1.82.1",
+    "python-dotenv>=1.1.0",
+    "setuptools>=80.9.0",
+]
+
+[project.optional-dependencies]
+full = [
+]
+test = []
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+
+[[tool.uv.index]]
+url = "https://mirrors.aliyun.com/pypi/simple"
