@@ -22,7 +22,7 @@ API_KEY = os.getenv("API_KEY")
 # 如果您使用的是官方 API，就直接用 https://api.siliconflow.cn/v1 就行。
 BASE_URL = "https://api.siliconflow.cn/v1"
 
-# 基于langchat的OpenAI实例
+# 基于langchain的OpenAI实例，用于代码生成
 llm = ChatOpenAI(temperature=0.20, model_name="Qwen/Qwen2.5-Coder-7B-Instruct", max_tokens=4096,
                  openai_api_key=API_KEY, openai_api_base=BASE_URL, max_retries=3,
                  seed=42, presence_penalty=0.1, frequency_penalty=0.1
@@ -40,7 +40,7 @@ embedding_function = embedding_functions.OpenAIEmbeddingFunction(
 )
 
 
-def get_completions(llm_prompt, model_endpoint):
+def get_completions(llm_prompt, model_endpoint="Qwen/Qwen3-8B"):
     extra_body = {}
     if "Qwen3" in model_endpoint:
         extra_body = {
