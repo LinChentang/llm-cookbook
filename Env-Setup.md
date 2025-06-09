@@ -39,12 +39,12 @@ BASE_URL=model_base_url
 如果需要调用模型，请直接在notebook中添加以下代码（注意需要加载项目根目录到环境的path中），不需要额外的配置。
 ```python
 import os
-import sys
+from dotenv import load_dotenv, find_dotenv
 
-# 加载项目根目录到环境的path中
-sys.path.append(os.getcwd().split('content')[0][:-1])
+loaded = load_dotenv(find_dotenv(), override=True)
+# 从环境变量中获取 OpenAI API Key 或者直接赋值
+API_KEY = os.getenv("API_KEY")
 
-# 读取.env配置文件，加载配置的模型
-import utils.load_model
-from utils.load_model import get_completion
+# 如果您使用的是官方 API，就直接用 https://api.siliconflow.cn/v1 就行。
+BASE_URL = "https://api.siliconflow.cn/v1"
 ```
