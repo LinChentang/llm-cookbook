@@ -1,7 +1,7 @@
-import chromadb
 import re
-import numpy as np
 
+import chromadb
+import numpy as np
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
 from pypdf import PdfReader
 from tqdm import tqdm
@@ -19,7 +19,7 @@ def _read_pdf(filename):
     list: A list of text content from each page of the PDF file.
     """
     reader = PdfReader(filename)
-    
+
     # Extract text from each page and remove leading/trailing whitespaces
     pdf_texts = [p.extract_text().strip() for p in reader.pages]
 
@@ -51,7 +51,7 @@ def _chunk_texts(texts, langcode="zh"):
             # 使用正则表达式匹配中文句子的分割符号，将中文分句
             sentences = re.split(r'[，。！？]', text)
             return [s.strip() for s in sentences if s.strip()]
-        
+
         character_split_texts = []
         for text in texts:
             # 每个段落逐个分割句子
@@ -59,7 +59,7 @@ def _chunk_texts(texts, langcode="zh"):
     else:
         # 英文句子分割
         character_splitter = RecursiveCharacterTextSplitter(
-            separators=["\n\n", "\n", ". ", " ", ""], # 英文
+            separators=["\n\n", "\n", ". ", " ", ""],  # 英文
             # separators=["\n\n", "\n", "。", "，", ""], # 中文
             chunk_size=1000,
             chunk_overlap=0
@@ -80,6 +80,7 @@ def _chunk_texts(texts, langcode="zh"):
 
     return token_split_texts
 
+
 def load_chroma(filename, collection_name, embedding_function, langcode='zh'):
     """
     加载PDF文件，分块，初始化chroma集合
@@ -96,24 +97,30 @@ def load_chroma(filename, collection_name, embedding_function, langcode='zh'):
     """
     # Read the text from the PDF file
     texts = _read_pdf(filename)
-    
+
     # Chunk the texts based on the language code
     chunks = _chunk_texts(texts, langcode)
 
     # Create a new ChromaDB client
     chroma_client = chromadb.Client()
 
+    # 检查集合是否存在，若存在则删除
+    if collection_name in chroma_client.list_collections():
+        chroma_client.delete_collection(name=collection_name)
+
     # Create a new collection with the specified name and embedding function
-    chroma_collection = chroma_client.create_collection(name=collection_name, 
-                                                        embedding_function=embedding_function)
+    chroma_collection = chroma_client.get_or_create_collection(name=collection_name,
+                                                               embedding_function=embedding_function)
 
     # Generate IDs for the chunks
-    ids = [str(i) for i in range(len(chunks))]
-
-    # Add the chunks to the collection
-    chroma_collection.add(ids=ids, documents=chunks)
+    batch_size = 64
+    for i in range(0, len(chunks), batch_size):
+        batch_texts = chunks[i:i + batch_size]
+        batch_ids = [str(j) for j in range(i, i + len(batch_texts))]
+        chroma_collection.add(ids=batch_ids, documents=batch_texts)
 
     return chroma_collection
+
 
 def word_wrap(string, n_chars=72):
     """
@@ -130,9 +137,10 @@ def word_wrap(string, n_chars=72):
     if len(string) < n_chars:
         return string
     else:
-        return string[:n_chars].rsplit(' ', 1)[0] + '\n' + word_wrap(string[len(string[:n_chars].rsplit(' ', 1)[0])+1:], n_chars)
+        return string[:n_chars].rsplit(' ', 1)[0] + '\n' + word_wrap(
+            string[len(string[:n_chars].rsplit(' ', 1)[0]) + 1:], n_chars)
 
-   
+
 def project_embeddings(embeddings, umap_transform):
     """
     用 UMAP 将高维的embeddings矩阵投影到2维，方便可视化。
@@ -146,7 +154,7 @@ def project_embeddings(embeddings, umap_transform):
         array-like: The UMAP-transformed embeddings.
     """
 
-    umap_embeddings = np.empty((len(embeddings),2))
-    for i, embedding in enumerate(tqdm(embeddings)): 
+    umap_embeddings = np.empty((len(embeddings), 2))
+    for i, embedding in enumerate(tqdm(embeddings)):
         umap_embeddings[i] = umap_transform.transform([embedding])
     return umap_embeddings
