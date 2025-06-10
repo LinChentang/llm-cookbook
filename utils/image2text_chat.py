@@ -10,6 +10,7 @@
 
 import re
 import warnings
+from enum import Enum
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -30,7 +31,13 @@ BASE_URL = "https://api.siliconflow.cn/v1"
 openai_client = OpenAI(api_key=API_KEY, base_url=BASE_URL, max_retries=3)
 
 
-def get_completion_image2text(image_input, text_input=None, model_endpoint="Qwen/Qwen2.5-VL-72B-Instruct"):
+class InputImageType(Enum):
+    IMAGE_URL = 'IMAGE_URL'
+    IMAGE_BASE64 = 'IMAGE_BASE64'
+    IMAGE_FILE = 'IMAGE_FILE'
+
+
+def get_completion(input_image_type, image_input, text_input=None, model_endpoint="Qwen/Qwen2.5-VL-72B-Instruct"):
     """
     从图像中提取文本信息。
     :param image_input: 图像输入，可以是图片路径或图片 URL
@@ -39,20 +46,20 @@ def get_completion_image2text(image_input, text_input=None, model_endpoint="Qwen
     """
     text_input = text_input or "请用一段文字描述这张图片。"
 
-    if is_url(image_input):
-        # 传入的是图片 URL
-        image_info = {
+    image_info = {
+        "type": "image_url",
+        "image_url": {
             "type": "image_url",
             "image_url": {
-                "url": image_input,
+                "url": "URL_ADDRESS",
                 "detail": "auto"
             }
         }
-    else:
-        # 传入的是图片路径
+    }
+
+    if input_image_type == InputImageType.IMAGE_FILE:
+        # 传入的是图片文件
         base64_image = image_to_base64(image_input)
-        if not base64_image:
-            return None
         # 获取图片的 MIME 类型
         mime_type = get_image_mime_type(image_input)
         image_info = {
@@ -62,8 +69,26 @@ def get_completion_image2text(image_input, text_input=None, model_endpoint="Qwen
                 "detail": "auto"
             }
         }
+    if input_image_type == InputImageType.IMAGE_URL:
+        # 传入的是图片 URL
+        image_info = {
+            "type": "image_url",
+            "image_url": {
+                "url": image_input,
+                "detail": "auto"
+            }
+        }
+    if input_image_type == InputImageType.IMAGE_BASE64:
+        # 传入的是图片的base64编码
+        image_info = {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/png;base64,{image_input}",
+                "detail": "auto"
+            }
+        }
 
-        # 构造包含图像信息的消息
+    # 构造包含图像信息的消息
     messages = [
         {
             "role": "user",
@@ -138,4 +163,4 @@ def is_url(string):
 if __name__ == '__main__':
     image_url = "https://free-images.com/sm/9596/dog_animal_greyhound_983023.jpg"
     content = "请描述图片，并生成10个字以内的标题。"
-    print(get_completion_image2text(image_url))
+    print(get_completion(InputImageType.IMAGE_URL ,image_url))
