@@ -18,6 +18,7 @@ dependencies = [
     "langchain-community>=0.3.24",
     "langchain-experimental>=0.3.4",
     "langchain-openai>=0.3.21",
+    "llama-index>=0.12.41",
     "matplotlib>=3.10.3",
     "notebook>=7.4.3",
     "numexpr>=2.10.2",
